@@ -8,12 +8,16 @@ import com.isuru.wallet.service.*;
 import com.isuru.wallet.status.message.ResponseMessage;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Isuru Gajanayake
  * @see com.isuru.wallet.service.WalletServiceGrpc.WalletServiceImplBase
  */
 public class WalletServiceImpl extends WalletServiceGrpc.WalletServiceImplBase {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WalletServiceImpl.class);
 
 
     private final TransactionService transactionService = new TransactionServiceImpl();
@@ -30,6 +34,7 @@ public class WalletServiceImpl extends WalletServiceGrpc.WalletServiceImplBase {
      */
     @Override
     public void deposit(DepositRequest request, StreamObserver<TransactionResponse> responseObserver) {
+        LOGGER.info("User :"+ request.getDeposit().getUserId() + " invoked deposit");
         final String status = this.transactionService.createCashDeposit(request);
         if (status == ResponseMessage.TRANSACTION_SUCCESS) {
             responseObserver.onNext(
@@ -58,6 +63,7 @@ public class WalletServiceImpl extends WalletServiceGrpc.WalletServiceImplBase {
      */
     @Override
     public void withdraw(WithdrawalRequest request, StreamObserver<TransactionResponse> responseObserver) {
+        LOGGER.info("User : "+ request.getWithdrawal().getUserId() + " invoked withdraw");
         final String status = this.transactionService.createCashWithdrawal(request);
         if (status == ResponseMessage.TRANSACTION_SUCCESS) {
             responseObserver.onNext(
@@ -83,7 +89,9 @@ public class WalletServiceImpl extends WalletServiceGrpc.WalletServiceImplBase {
      */
     @Override
     public void getBalance(BalanceRequest request, StreamObserver<BalanceResponse> responseObserver) {
+        LOGGER.info("User : "+ request.getUserId() + " invoked getBalance");
         final BalanceResponse response = this.accountService.checkAccountsBalance(request);
         responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 }

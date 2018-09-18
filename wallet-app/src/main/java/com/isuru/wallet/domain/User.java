@@ -18,9 +18,6 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
 
-    // @OneToMany(fetch = FetchType.LAZY, mappedBy = "")
-    // private Set<Account> accounts;
-
     public int getId() {
         return id;
     }

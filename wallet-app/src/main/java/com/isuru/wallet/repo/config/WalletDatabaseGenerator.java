@@ -46,7 +46,7 @@ public class WalletDatabaseGenerator {
         schemaExport.setFormat(true);
         schemaExport.setDelimiter(";");
         schemaExport.setOutputFile("db-schema.sql");
-        schemaExport.execute(EnumSet.of(TargetType.DATABASE), SchemaExport.Action.BOTH, (Metadata) metadata.buildMetadata());
+        schemaExport.execute(EnumSet.of(TargetType.DATABASE), SchemaExport.Action.CREATE, (Metadata) metadata.buildMetadata());
 
     }
 }

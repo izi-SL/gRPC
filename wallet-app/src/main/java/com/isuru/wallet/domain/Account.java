@@ -28,8 +28,8 @@ public class Account implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // @OneToMany(fetch = FetchType.LAZY, mappedBy = "")
-    // private Set<TransactionHistory> transactions;
+    @Version
+    private int version;
 
     public int getId() {
         return id;
@@ -62,4 +62,13 @@ public class Account implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
 }

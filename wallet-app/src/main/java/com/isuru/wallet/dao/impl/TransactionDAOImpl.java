@@ -5,7 +5,6 @@ import com.isuru.wallet.domain.Account;
 import com.isuru.wallet.domain.TransactionHistory;
 import com.isuru.wallet.domain.User;
 import com.isuru.wallet.exception.UnknownAccountException;
-import com.isuru.wallet.exception.UnregisteredUserException;
 import com.isuru.wallet.repo.config.HibernateUtil;
 import com.isuru.wallet.service.CurrencyType;
 import com.isuru.wallet.service.Transaction;
@@ -15,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -53,9 +53,13 @@ public class TransactionDAOImpl implements TransactionDAO {
                 account.setBalance(account.getBalance() + amount);
 
                 TransactionHistory transaction = this.createTransaction(account, amount, Transaction.TransactionType.DEPOSIT);
-
-                session.save(transaction);
-                session.getTransaction().commit();
+                try {
+                    account.setVersion(this.getAccountByAccountId(session, account.getId()).getVersion());
+                    session.save(transaction);
+                    session.getTransaction().commit();
+                } catch (OptimisticLockException oex) {
+                    LOGGER.error(new StringBuilder().append("Cannot give the priority to this transaction ").append(oex.toString()).toString());
+                }
                 return ResponseMessage.TRANSACTION_SUCCESS;
             } else {
                 return ResponseMessage.UNKNOWN_USER;
@@ -91,14 +95,20 @@ public class TransactionDAOImpl implements TransactionDAO {
             if (null != user) {
                 Account account = this.getUserAccountByCurrencyType(session, user, currencyType);
                 if (null == account) {
-                    throw new UnknownAccountException(new StringBuilder().append("This user id").append(userId).append("does not have account with").append(currencyType.name()).append(" currency. ").toString());
+                    throw new UnknownAccountException(new StringBuilder().append("This user id ").append(userId).append("does not have account with").append(currencyType.name()).append(" currency. ").toString());
                 }
 
                 if (this.isValidWithdrawal(account, amount)) {
                     final TransactionHistory transaction = this.createTransaction(account, amount, Transaction.TransactionType.WITHDRAWAL);
                     account.setBalance(account.getBalance() - amount);
                     session.save(transaction);
-                    session.getTransaction().commit();
+                    try {
+                        account.setVersion(this.getAccountByAccountId(session, account.getId()).getVersion());
+                        session.save(transaction);
+                        session.getTransaction().commit();
+                    } catch (OptimisticLockException oex) {
+                        LOGGER.error(new StringBuilder().append("Cannot give the priority to this transaction ").append(oex.toString()).toString());
+                    }
                     return ResponseMessage.TRANSACTION_SUCCESS;
                 } else {
                     return ResponseMessage.INSUFFICIENT_FUND;
@@ -160,6 +170,17 @@ public class TransactionDAOImpl implements TransactionDAO {
      */
     private User getUserByUserId(final Session session, final int userId) {
         return session.get(User.class, userId);
+    }
+
+    /**
+     * Return account by id
+     *
+     * @param session   @{@link Session}
+     * @param accountId @int
+     * @return @{@link Account}
+     */
+    private Account getAccountByAccountId(final Session session, final int accountId) {
+        return session.get(Account.class, accountId);
     }
 
     /**
