@@ -27,6 +27,6 @@ public class BalanceCheckEvent implements Runnable {
         api.getAccoutBalances(BalanceRequest.newBuilder()
                 .setUserId(this.userId)
                 .build());
-        LOGGER.info(Thread.currentThread().getName() +  " triggered BalanceCheckEvent");
+        LOGGER.info(Thread.currentThread().getName() +  " triggered BalanceCheckEvent for User "+ userId);
     }
 }

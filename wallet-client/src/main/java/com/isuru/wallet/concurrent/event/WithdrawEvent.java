@@ -39,7 +39,7 @@ public class WithdrawEvent implements Runnable {
         api.createWithdrawal(WithdrawalRequest.newBuilder()
                 .setWithdrawal(transaction)
                 .build());
-        LOGGER.info(Thread.currentThread().getName() +  " triggered WithdrawEvent");
+        LOGGER.info(Thread.currentThread().getName() +  " triggered WithdrawEvent User"+ userId);
     }
 
 

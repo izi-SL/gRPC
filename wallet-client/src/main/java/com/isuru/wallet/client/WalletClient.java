@@ -12,11 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Wallet-client implementation
+ * Wallet-client implementation for simulate user API calls
  *
  * @author Isuru Gajanayake
  */
@@ -34,15 +35,18 @@ public class WalletClient {
         final int rounds_per_thread = 2;
 
         /**
-         * Generate dummy data
+         * Generate user data for operations
          */
         generateData(concurrent_threads_per_user);
 
         try {
             ExecutorService executorService = Executors.newFixedThreadPool(users);
-            allRounds.remove(2);
 
             for (int i = 0; i < users; i++) {
+            		final List<Round> userRounds = new ArrayList<>();
+            		for (int j = 0; i < rounds_per_thread; j++) {
+            			userRounds.add(pickRandomRound());
+            		}
                 User user = new User(allRounds);
                 executorService.execute(user);
             }
@@ -100,7 +104,15 @@ public class WalletClient {
         allRounds.add(roundA);
         allRounds.add(roundB);
         allRounds.add(roundC);
-
-
+    }
+    
+    /**
+     * Pick round by random
+     * 
+     * @return {@link Round}
+     */
+    private static Round pickRandomRound() {
+    	Random random = new Random();
+    	return allRounds.get(random.nextInt(allRounds.size()));
     }
 }
