@@ -25,7 +25,7 @@ public class WalletServer {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         LOGGER.info("Building Wallet Database... ");
-        // WalletDatabaseGenerator.build();
+        WalletDatabaseGenerator.build();
         LOGGER.info("Successfully Built The Database ... ");
 
         LOGGER.info("Wallet Server Starting...!!!");

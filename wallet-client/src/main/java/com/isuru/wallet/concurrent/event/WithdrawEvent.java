@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WithdrawEvent implements Runnable {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(WithdrawEvent.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WithdrawEvent.class);
 
     private int userId;
     private double amount;
@@ -39,7 +39,7 @@ public class WithdrawEvent implements Runnable {
         api.createWithdrawal(WithdrawalRequest.newBuilder()
                 .setWithdrawal(transaction)
                 .build());
-        LOGGER.info(Thread.currentThread().getName() +  " triggered WithdrawEvent User"+ userId);
+        LOGGER.info(Thread.currentThread().getName() + " triggered WithdrawEvent User" + userId);
     }
 
 

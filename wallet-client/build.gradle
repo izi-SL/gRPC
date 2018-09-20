@@ -52,7 +52,7 @@ protobuf {
             grpc {}
         }
     }
-     generatedFilesBaseDir = "$projectDir/src"
+    generatedFilesBaseDir = "$projectDir/src"
 }
 
 jar {

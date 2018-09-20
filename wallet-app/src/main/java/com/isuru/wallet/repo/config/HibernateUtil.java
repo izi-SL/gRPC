@@ -16,6 +16,8 @@ import java.util.Map;
 
 /**
  * Hibernate utility implementation for get @{@link SessionFactory} and destroy @{@link StandardServiceRegistry}
+ *
+ * @author Isuru Gajanayake
  */
 public class HibernateUtil {
 

@@ -34,7 +34,7 @@ public class WalletServiceImpl extends WalletServiceGrpc.WalletServiceImplBase {
      */
     @Override
     public void deposit(DepositRequest request, StreamObserver<TransactionResponse> responseObserver) {
-        LOGGER.info("User :"+ request.getDeposit().getUserId() + " invoked deposit");
+        LOGGER.info(new StringBuilder().append("User :").append(request.getDeposit().getUserId()).append(" invoked deposit").toString());
         final String status = this.transactionService.createCashDeposit(request);
         if (status == ResponseMessage.TRANSACTION_SUCCESS) {
             responseObserver.onNext(
@@ -63,7 +63,7 @@ public class WalletServiceImpl extends WalletServiceGrpc.WalletServiceImplBase {
      */
     @Override
     public void withdraw(WithdrawalRequest request, StreamObserver<TransactionResponse> responseObserver) {
-        LOGGER.info("User : "+ request.getWithdrawal().getUserId() + " invoked withdraw");
+        LOGGER.info(new StringBuilder().append("User : ").append(request.getWithdrawal().getUserId()).append(" invoked withdraw").toString());
         final String status = this.transactionService.createCashWithdrawal(request);
         if (status == ResponseMessage.TRANSACTION_SUCCESS) {
             responseObserver.onNext(
@@ -89,7 +89,7 @@ public class WalletServiceImpl extends WalletServiceGrpc.WalletServiceImplBase {
      */
     @Override
     public void getBalance(BalanceRequest request, StreamObserver<BalanceResponse> responseObserver) {
-        LOGGER.info("User : "+ request.getUserId() + " invoked getBalance");
+        LOGGER.info(new StringBuilder().append("User : ").append(request.getUserId()).append(" invoked getBalance").toString());
         final BalanceResponse response = this.accountService.checkAccountsBalance(request);
         responseObserver.onNext(response);
         responseObserver.onCompleted();

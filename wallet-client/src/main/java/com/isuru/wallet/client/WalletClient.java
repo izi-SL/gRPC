@@ -30,9 +30,11 @@ public class WalletClient {
 
     public static void main(String[] args) {
 
-        final int users = 1;
-        final int concurrent_threads_per_user = 2;
-        final int rounds_per_thread = 2;
+        final int users = Integer.parseInt(args[0]);
+        final int concurrent_threads_per_user = Integer.parseInt(args[1]);
+        final int rounds_per_thread = Integer.parseInt(args[2]);
+
+        LOGGER.info("Users :"+ users+ " concurrent_threads_per_user :"+ concurrent_threads_per_user+ " rounds_per_thread :"+ rounds_per_thread);
 
         /**
          * Generate user data for operations
@@ -43,17 +45,16 @@ public class WalletClient {
             ExecutorService executorService = Executors.newFixedThreadPool(users);
 
             for (int i = 0; i < users; i++) {
-            		final List<Round> userRounds = new ArrayList<>();
-            		for (int j = 0; i < rounds_per_thread; j++) {
-            			userRounds.add(pickRandomRound());
-            		}
+                List<Round> userRounds = new ArrayList<>();
+                for (int j = 0; j < rounds_per_thread; j++) {
+                    userRounds.add(pickRandomRound());
+                }
                 User user = new User(allRounds);
                 executorService.execute(user);
             }
             executorService.shutdown();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
+            LOGGER.error(ex.getMessage());
         }
 
 
@@ -105,14 +106,14 @@ public class WalletClient {
         allRounds.add(roundB);
         allRounds.add(roundC);
     }
-    
+
     /**
      * Pick round by random
-     * 
+     *
      * @return {@link Round}
      */
     private static Round pickRandomRound() {
-    	Random random = new Random();
-    	return allRounds.get(random.nextInt(allRounds.size()));
+        Random random = new Random();
+        return allRounds.get(random.nextInt(allRounds.size()));
     }
 }

@@ -3,7 +3,6 @@ package com.isuru.wallet.dao.impl;
 import com.isuru.wallet.dao.AccountDAO;
 import com.isuru.wallet.domain.Account;
 import com.isuru.wallet.domain.User;
-import com.isuru.wallet.exception.UnregisteredUserException;
 import com.isuru.wallet.repo.config.HibernateUtil;
 import org.hibernate.Session;
 import org.slf4j.Logger;

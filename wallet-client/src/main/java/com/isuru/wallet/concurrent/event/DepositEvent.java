@@ -39,7 +39,7 @@ public class DepositEvent implements Runnable {
         api.createDeposit(DepositRequest.newBuilder()
                 .setDeposit(transaction)
                 .build());
-        LOGGER.info(Thread.currentThread().getName() +  " triggered DepositEvent for User "+ userId);
+        LOGGER.info(new StringBuilder().append(Thread.currentThread().getName()).append(" triggered DepositEvent for User ").append(userId).toString());
     }
 
 
